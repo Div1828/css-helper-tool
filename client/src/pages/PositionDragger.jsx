@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import CodeBlock from "../components/CodeBlock"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -8,30 +8,59 @@ function PositionDragger() {
   const [position, setPosition] = useState({ top: 100, left: 100 })
   const circleRef = useRef(null)
 
-  const handleMouseDown = (e) => {
+  useEffect(() => {
     const circle = circleRef.current
     if (!circle) return
 
-    const startX = e.clientX
-    const startY = e.clientY
-    const startTop = circle.offsetTop
-    const startLeft = circle.offsetLeft
+    let startX = 0
+    let startY = 0
+    let startTop = 0
+    let startLeft = 0
 
-    const handleMouseMove = (moveEvent) => {
-      const newTop = startTop + (moveEvent.clientY - startY)
-      const newLeft = startLeft + (moveEvent.clientX - startX)
+    const handleStart = (e) => {
+      e.preventDefault()
+      const isTouch = e.type === "touchstart"
+      const clientX = isTouch ? e.touches[0].clientX : e.clientX
+      const clientY = isTouch ? e.touches[0].clientY : e.clientY
+
+      startX = clientX
+      startY = clientY
+      startTop = circle.offsetTop
+      startLeft = circle.offsetLeft
+
+      document.addEventListener("mousemove", handleMove)
+      document.addEventListener("mouseup", handleEnd)
+      document.addEventListener("touchmove", handleMove, { passive: false })
+      document.addEventListener("touchend", handleEnd)
+    }
+
+    const handleMove = (e) => {
+      const isTouch = e.type === "touchmove"
+      const clientX = isTouch ? e.touches[0].clientX : e.clientX
+      const clientY = isTouch ? e.touches[0].clientY : e.clientY
+
+      const newTop = startTop + (clientY - startY)
+      const newLeft = startLeft + (clientX - startX)
+
       circle.style.top = `${newTop}px`
       circle.style.left = `${newLeft}px`
     }
 
-    const handleMouseUp = () => {
-      document.removeEventListener("mousemove", handleMouseMove)
-      document.removeEventListener("mouseup", handleMouseUp)
+    const handleEnd = () => {
+      document.removeEventListener("mousemove", handleMove)
+      document.removeEventListener("mouseup", handleEnd)
+      document.removeEventListener("touchmove", handleMove)
+      document.removeEventListener("touchend", handleEnd)
     }
 
-    document.addEventListener("mousemove", handleMouseMove)
-    document.addEventListener("mouseup", handleMouseUp)
-  }
+    circle.addEventListener("mousedown", handleStart)
+    circle.addEventListener("touchstart", handleStart, { passive: false })
+
+    return () => {
+      circle.removeEventListener("mousedown", handleStart)
+      circle.removeEventListener("touchstart", handleStart)
+    }
+  }, [showOverlay])
 
   const handleConfirm = () => {
     const circle = circleRef.current
@@ -62,8 +91,7 @@ left: ${position.left}px;`
         <div className="fixed inset-0 z-50 bg-white dark:bg-black">
           <div
             ref={circleRef}
-            onMouseDown={handleMouseDown}
-            className="w-14 h-14 bg-blue-500 rounded-full absolute cursor-move"
+            className="w-14 h-14 bg-blue-500 rounded-full absolute cursor-move touch-none"
             style={{
               top: `${position.top}px`,
               left: `${position.left}px`,

@@ -3,7 +3,7 @@ import CodeBlock from "../components/CodeBlock"
 import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
-import { Input } from "@/components/ui/input"
+
 import {
   Select,
   SelectTrigger,
@@ -43,25 +43,32 @@ items-${align}
     <div className="grid gap-6 sm:grid-cols-2">
       <Card>
         <CardContent className="p-4">
-          <div
-            className="w-full aspect-[3/2] bg-muted rounded p-2"
-            style={{
-              display: "grid",
-              gridTemplateColumns: `repeat(${columns}, 1fr)`,
-              gridTemplateRows: `repeat(${rows}, 1fr)`,
-              gap: `${gap}px`,
-              justifyItems: justify,
-              alignItems: align,
-            }}
-          >
-            {items.map((i) => (
-            <div key={i} className="flex items-center justify-center">
-                <div className="w-8 h-8 text-sm rounded bg-blue-500 text-white flex items-center justify-center">
-                {i}
+            <div className="w-full aspect-[3/2] bg-muted rounded overflow-hidden p-2">
+                <div
+                    className="w-full h-full grid"
+                    style={{
+                    gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+                    gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
+                    gap: `${gap}px`,
+                    justifyItems: justify,
+                    alignItems: align,
+                    }}
+                >
+                    {items.map((i) => (
+                    <div
+                        key={i}
+                        className="bg-blue-500 text-black dark:text-white text-sm flex items-center justify-center rounded"
+                        style={{ width: "100%", height: "100%" }}
+                    >
+                        <div className="w-full h-full flex items-center justify-center text-xs rounded bg-blue-500">
+                        {i}
+                        </div>
+                    </div>
+                    ))}
                 </div>
             </div>
-            ))}
-          </div>
+
+
         </CardContent>
       </Card>
 
@@ -71,7 +78,7 @@ items-${align}
             <Label>Columns ({columns})</Label>
             <Slider
               min={1}
-              max={6}
+              max={5}
               step={1}
               defaultValue={[columns]}
               onValueChange={([v]) => setColumns(v)}
@@ -81,7 +88,7 @@ items-${align}
             <Label>Rows ({rows})</Label>
             <Slider
               min={1}
-              max={6}
+              max={5}
               step={1}
               defaultValue={[rows]}
               onValueChange={([v]) => setRows(v)}
@@ -91,7 +98,7 @@ items-${align}
             <Label>Gap ({gap}px)</Label>
             <Slider
               min={0}
-              max={48}
+              max={40}
               step={4}
               defaultValue={[gap]}
               onValueChange={([v]) => setGap(v)}
