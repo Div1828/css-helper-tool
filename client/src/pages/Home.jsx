@@ -33,7 +33,7 @@ const tools = [
     Icon: Type,
   },
   {
-    path: '/shadowforge',
+    path: '/shadow-forge',
     title: 'ShadowForge',
     desc: 'Craft layered shadows with live preview.',
     Icon: Layers,

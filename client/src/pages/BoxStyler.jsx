@@ -14,7 +14,6 @@ function BoxStyler() {
   const [bgColor, setBgColor] = useState("#ffffff")
   const [hoverBgColor, setHoverBgColor] = useState("#3b82f6")
   const [shadowLevel, setShadowLevel] = useState(3)
-  const [useTailwind, setUseTailwind] = useState(true)
   const [hoverMode, setHoverMode] = useState(false)
   const [transitionType, setTransitionType] = useState("ease")
 
@@ -89,28 +88,84 @@ transition: ${transitionValue};${
 
   return (
     <div className="grid gap-6 sm:grid-cols-2">
+      
       <Card>
         <CardContent className="flex items-center justify-center p-6 min-h-[300px]">
           <div
             style={previewStyle}
             onMouseEnter={(e) => {
-              if (hoverMode) Object.assign(e.currentTarget.style, previewHoverStyle)
+              if (hoverMode)
+                Object.assign(e.currentTarget.style, previewHoverStyle)
             }}
             onMouseLeave={(e) => {
-              if (hoverMode) Object.assign(e.currentTarget.style, previewStyle)
+              if (hoverMode)
+                Object.assign(e.currentTarget.style, previewStyle)
             }}
           />
         </CardContent>
       </Card>
 
+      
       <Card>
         <CardContent className="space-y-4 p-6">
-          <div><Label>Width ({width}px)</Label><Slider defaultValue={[width]} min={50} max={400} step={10} onValueChange={([val]) => setWidth(val)} /></div>
-          <div><Label>Height ({height}px)</Label><Slider defaultValue={[height]} min={50} max={400} step={10} onValueChange={([val]) => setHeight(val)} /></div>
-          <div><Label>Border Radius ({radius}px)</Label><Slider defaultValue={[radius]} min={0} max={100} step={4} onValueChange={([val]) => setRadius(val)} /></div>
-          <div><Label>Opacity ({opacity}%)</Label><Slider defaultValue={[opacity]} min={0} max={100} step={5} onValueChange={([val]) => setOpacity(val)} /></div>
-          <div><Label>Shadow Level ({shadowLevel})</Label><Slider defaultValue={[shadowLevel]} min={0} max={6} step={1} onValueChange={([val]) => setShadowLevel(val)} /></div>
-          <div><Label>Background Color</Label><Input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} /></div>
+          <div>
+            <Label>Width ({width}px)</Label>
+            <Slider
+              defaultValue={[width]}
+              min={50}
+              max={400}
+              step={10}
+              onValueChange={([val]) => setWidth(val)}
+            />
+          </div>
+          <div>
+            <Label>Height ({height}px)</Label>
+            <Slider
+              defaultValue={[height]}
+              min={50}
+              max={400}
+              step={10}
+              onValueChange={([val]) => setHeight(val)}
+            />
+          </div>
+          <div>
+            <Label>Border Radius ({radius}px)</Label>
+            <Slider
+              defaultValue={[radius]}
+              min={0}
+              max={100}
+              step={4}
+              onValueChange={([val]) => setRadius(val)}
+            />
+          </div>
+          <div>
+            <Label>Opacity ({opacity}%)</Label>
+            <Slider
+              defaultValue={[opacity]}
+              min={0}
+              max={100}
+              step={5}
+              onValueChange={([val]) => setOpacity(val)}
+            />
+          </div>
+          <div>
+            <Label>Shadow Level ({shadowLevel})</Label>
+            <Slider
+              defaultValue={[shadowLevel]}
+              min={0}
+              max={6}
+              step={1}
+              onValueChange={([val]) => setShadowLevel(val)}
+            />
+          </div>
+          <div>
+            <Label>Background Color</Label>
+            <Input
+              type="color"
+              value={bgColor}
+              onChange={(e) => setBgColor(e.target.value)}
+            />
+          </div>
 
           <div className="flex items-center gap-2 pt-2">
             <Label className="mr-auto">Hover Mode</Label>
@@ -119,13 +174,20 @@ transition: ${transitionValue};${
 
           {hoverMode && (
             <>
-              <div><Label>Hover BG Color</Label><Input type="color" value={hoverBgColor} onChange={(e) => setHoverBgColor(e.target.value)} /></div>
+              <div>
+                <Label>Hover BG Color</Label>
+                <Input
+                  type="color"
+                  value={hoverBgColor}
+                  onChange={(e) => setHoverBgColor(e.target.value)}
+                />
+              </div>
               <div>
                 <Label>Transition Type</Label>
                 <select
                   value={transitionType}
                   onChange={(e) => setTransitionType(e.target.value)}
-                  className="w-full mt-1 rounded border border-gray-300 px-2 py-1 text-sm"
+                  className="w-full mt-1 rounded border border-border bg-popover text-popover-foreground px-2 py-1 text-sm"
                 >
                   <option value="none">None</option>
                   <option value="ease">Ease</option>
@@ -135,19 +197,12 @@ transition: ${transitionValue};${
               </div>
             </>
           )}
-
-          <div className="flex items-center gap-2 pt-2">
-            <Label className="mr-auto">Tailwind Output</Label>
-            <Switch checked={useTailwind} onCheckedChange={setUseTailwind} />
-          </div>
         </CardContent>
       </Card>
 
+      
       <div className="sm:col-span-2">
-        <CodeBlock
-          code={useTailwind ? tailwindClasses : plainCSS}
-          language={useTailwind ? "html" : "css"}
-        />
+        <CodeBlock tailwindCode={tailwindClasses} cssCode={plainCSS} />
       </div>
     </div>
   )
